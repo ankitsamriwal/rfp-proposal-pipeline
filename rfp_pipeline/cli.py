@@ -13,6 +13,7 @@ from .gates import GateKeeper
 from .ingest import ingest_folder
 from .providers import get_provider
 from .stages import stage_analyst, stage_compliance, stage_proposal
+from .orchestrator import run_pipeline
 
 
 def run(args):
@@ -38,6 +39,12 @@ def run(args):
     audit = AuditTrail(run_dir)
     gates = GateKeeper(auto=args.auto)
 
+    if not args.legacy:
+        artifacts = run_pipeline(provider, rfp_text, run_dir, input_paths, audit, gates)
+        print(f"\n[pipeline] done. {len(artifacts)} artifacts in {run_dir}")
+        print(f"[pipeline] audit manifest: {audit.path}")
+        return
+
     out = stage_analyst(provider, rfp_text, run_dir)
     decision = gates.check("analyst", out)
     audit.record("analyst", input_paths, out, provider.label, decision)
@@ -62,6 +69,7 @@ def main():
     run_p.add_argument("--output", default="outputs", help="Where run folders are written")
     run_p.add_argument("--auto", action="store_true", help="Auto-approve all human-in-the-loop gates")
     run_p.add_argument("--provider", default=None, help="LLM provider: openai|azure|anthropic|ollama|mock (default: env LLM_PROVIDER or mock)")
+    run_p.add_argument("--legacy", action="store_true", help="Run the v1 three-stage pipeline instead of the five-agent orchestration")
     run_p.set_defaults(func=run)
     args = parser.parse_args()
     args.func(args)

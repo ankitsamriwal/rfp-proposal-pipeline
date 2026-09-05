@@ -45,12 +45,12 @@ def _md_table_to_rows(md):
     return rows
 
 
-def stage_compliance(provider, rfp_text, run_dir):
+def stage_compliance(provider, rfp_text, run_dir, out_name="05_compliance_matrix"):
     """Stage 2: compliance matrix as CSV + Markdown."""
     md = _run_stage(provider, "compliance_matrix", rfp_text)
-    md_path = _write(run_dir, "05_compliance_matrix.md", md)
+    md_path = _write(run_dir, f"{out_name}.md", md)
     rows = _md_table_to_rows(md)
-    csv_path = os.path.join(run_dir, "05_compliance_matrix.csv")
+    csv_path = os.path.join(run_dir, f"{out_name}.csv")
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if rows:
@@ -61,11 +61,11 @@ def stage_compliance(provider, rfp_text, run_dir):
     return [md_path, csv_path]
 
 
-def stage_proposal(provider, rfp_text, run_dir):
+def stage_proposal(provider, rfp_text, run_dir, out_name="06_proposal_skeleton"):
     """Stage 3: proposal skeleton as DOCX."""
     import docx
     skeleton_md = _run_stage(provider, "proposal_skeleton", rfp_text)
-    md_path = _write(run_dir, "06_proposal_skeleton.md", skeleton_md)
+    md_path = _write(run_dir, f"{out_name}.md", skeleton_md)
 
     doc = docx.Document()
     doc.add_heading("Proposal Skeleton", level=0)
@@ -83,6 +83,6 @@ def stage_proposal(provider, rfp_text, run_dir):
             doc.add_paragraph(line.strip("*"))
         else:
             doc.add_paragraph(line)
-    docx_path = os.path.join(run_dir, "06_proposal_skeleton.docx")
+    docx_path = os.path.join(run_dir, f"{out_name}.docx")
     doc.save(docx_path)
     return [md_path, docx_path]

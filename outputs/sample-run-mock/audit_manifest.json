@@ -1,53 +1,38 @@
 {
   "stages": [
     {
-      "stage": "analyst",
-      "timestamp": "2026-09-05T09:31:13.683566+00:00",
+      "stage": "analysis",
+      "timestamp": "2026-09-05T13:03:48.359282+00:00",
       "provider": "mock",
       "inputs": [
         {
-          "file": "outputs/run-20260905-093113/input_gulf_crescent_trading_llc_rfp.docx",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/input_gulf_crescent_trading_llc_rfp.docx",
           "sha256": "2e41c7803ee78a766db4ef4ce4b58eef0f6813fb5559e2e072647340e0af814d"
         }
       ],
       "outputs": [
         {
-          "file": "outputs/run-20260905-093113/01_executive_summary.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/01_executive_summary.md",
           "sha256": "5b8eaa35206f36c6af5dae91d1b184eff73def35f762c20e0b16e5ce9fe71939"
         },
         {
-          "file": "outputs/run-20260905-093113/02_gap_analysis.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/02_gap_analysis.md",
           "sha256": "841d37d88a081e035a7cbf8d380b89db9145e072e7e549df35b18005e38316ad"
         },
         {
-          "file": "outputs/run-20260905-093113/03_clarification_log.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/03_clarification_log.md",
           "sha256": "10d60f38eb19bbf1850ce5da6875c8e225b8009e3f51356f21bfda184f767112"
         },
         {
-          "file": "outputs/run-20260905-093113/04_risk_flags.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/04_risk_flags.md",
           "sha256": "ddfc8a9c02c543936c972d86ca8e4a73e8c8bb740ab861bc4f4604ddbd70dda3"
-        }
-      ],
-      "gate": "auto-approved",
-      "notes": ""
-    },
-    {
-      "stage": "compliance",
-      "timestamp": "2026-09-05T09:31:13.684374+00:00",
-      "provider": "mock",
-      "inputs": [
+        },
         {
-          "file": "outputs/run-20260905-093113/input_gulf_crescent_trading_llc_rfp.docx",
-          "sha256": "2e41c7803ee78a766db4ef4ce4b58eef0f6813fb5559e2e072647340e0af814d"
-        }
-      ],
-      "outputs": [
-        {
-          "file": "outputs/run-20260905-093113/05_compliance_matrix.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/05_compliance_matrix.md",
           "sha256": "74af0a8b69f58009325a4d6cd502f4de5fc425535ff8698d8119b1a9cae50929"
         },
         {
-          "file": "outputs/run-20260905-093113/05_compliance_matrix.csv",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/05_compliance_matrix.csv",
           "sha256": "0d261a4541d1347026961735e8ccdd53bd6b88b39c6347c7bf2bd87872ca3f0c"
         }
       ],
@@ -55,23 +40,69 @@
       "notes": ""
     },
     {
-      "stage": "proposal",
-      "timestamp": "2026-09-05T09:31:13.715582+00:00",
+      "stage": "solution",
+      "timestamp": "2026-09-05T13:03:48.393473+00:00",
       "provider": "mock",
       "inputs": [
         {
-          "file": "outputs/run-20260905-093113/input_gulf_crescent_trading_llc_rfp.docx",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/input_gulf_crescent_trading_llc_rfp.docx",
           "sha256": "2e41c7803ee78a766db4ef4ce4b58eef0f6813fb5559e2e072647340e0af814d"
         }
       ],
       "outputs": [
         {
-          "file": "outputs/run-20260905-093113/06_proposal_skeleton.md",
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/06_solution_outline.md",
+          "sha256": "766573bc0d69499926db452a05f3438e9d9499b3d1082d864d20d75c8a0cd259"
+        },
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/07_proposal_skeleton.md",
           "sha256": "1f15c2f53706f2734ee8c1836dfee3c712af2ab9e29a06beb73fdcb2deee2cb3"
         },
         {
-          "file": "outputs/run-20260905-093113/06_proposal_skeleton.docx",
-          "sha256": "ea2a49f6edb1427287da4e27f731d675c966aac975fb569ecb05942b418068ec"
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/07_proposal_skeleton.docx",
+          "sha256": "555bd71990b853810921cd07d9b3c1c5aaacce9c17e65633d84bc6f294687b7a"
+        },
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/08_licensing_boq.md",
+          "sha256": "7e8668c954a6c22367ea3ca94750e07f74987c3bbc851718d6d5e93a50f42700"
+        }
+      ],
+      "gate": "auto-approved",
+      "notes": ""
+    },
+    {
+      "stage": "commercial",
+      "timestamp": "2026-09-05T13:03:48.394163+00:00",
+      "provider": "mock",
+      "inputs": [
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/input_gulf_crescent_trading_llc_rfp.docx",
+          "sha256": "2e41c7803ee78a766db4ef4ce4b58eef0f6813fb5559e2e072647340e0af814d"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/09_commercial_offer.md",
+          "sha256": "0b990fa308a443609f4b5844e645db12fb8fc14d1ba525f925ce151d9a06d681"
+        }
+      ],
+      "gate": "auto-approved",
+      "notes": ""
+    },
+    {
+      "stage": "review",
+      "timestamp": "2026-09-05T13:03:48.394604+00:00",
+      "provider": "mock",
+      "inputs": [
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/input_gulf_crescent_trading_llc_rfp.docx",
+          "sha256": "2e41c7803ee78a766db4ef4ce4b58eef0f6813fb5559e2e072647340e0af814d"
+        }
+      ],
+      "outputs": [
+        {
+          "file": "/tmp/rfp-v2-test/run-20260905-130348/10_master_review.md",
+          "sha256": "c0181017d21d5e3b108b91338b05168e8e72bd5f602525874dbcd2c860074581"
         }
       ],
       "gate": "auto-approved",

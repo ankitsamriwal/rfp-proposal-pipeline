@@ -1,0 +1,22 @@
+{
+  "_note": "LOCAL ONLY. Never send this file or its contents to an external API. Sample rates for the prototype, AED.",
+  "currency": "AED",
+  "licences": {
+    "L01": {"name": "BC full-user subscription", "unit": "user/month", "rate": 260},
+    "L02": {"name": "BC team-member subscription", "unit": "user/month", "rate": 30}
+  },
+  "services": {
+    "F01": {"name": "Finance functional consulting", "unit": "day", "rate": 3200},
+    "F02": {"name": "Supply Chain functional consulting", "unit": "day", "rate": 3200},
+    "F03": {"name": "Sales functional consulting", "unit": "day", "rate": 3000},
+    "F04": {"name": "Manufacturing functional consulting", "unit": "day", "rate": 3400},
+    "F05": {"name": "Projects functional consulting", "unit": "day", "rate": 3200},
+    "S01": {"name": "Implementation project management", "unit": "day", "rate": 2800},
+    "S02": {"name": "Data migration & cutover", "unit": "day", "rate": 3000}
+  },
+  "default_service_days": {
+    "F01": 30, "F02": 25, "F03": 15, "F04": 35, "F05": 20,
+    "S01": 20, "S02": 10
+  },
+  "subscription_months": 36
+}

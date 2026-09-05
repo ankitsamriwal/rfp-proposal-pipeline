@@ -51,9 +51,11 @@ GAP_LIBRARY = [
 
 
 def _rfp_text(prompt):
-    marker = "RFP TEXT:"
-    idx = prompt.find(marker)
-    return prompt[idx + len(marker):] if idx >= 0 else prompt
+    for marker in ("RFP TEXT:", "GAP ANALYSIS:"):
+        idx = prompt.find(marker)
+        if idx >= 0:
+            return prompt[idx + len(marker):]
+    return prompt
 
 
 def _find(pattern, text):
@@ -73,6 +75,7 @@ def answer(system, prompt):
         "risk_flags": risk_flags,
         "compliance_matrix": compliance_matrix,
         "proposal_skeleton": proposal_skeleton,
+        "solution_outline": solution_outline,
     }.get(task, lambda t: f"[mock] no handler for task {task}")
     return handler(text)
 
@@ -186,3 +189,35 @@ def proposal_skeleton(text):
         f"12. Assumptions, exclusions, and dependencies\n"
         f"13. Appendices (case studies, certifications)\n"
     )
+
+
+def solution_outline(text):
+    gaps = [label for pat, label, _ in GAP_LIBRARY if _find(pat, text)]
+    lines = [
+        "# Solution Outline",
+        "",
+        "## Proposed scope",
+        "",
+        "Implementation of Dynamics 365 Business Central covering finance, procurement, inventory and sales,",
+        "with data migration, third-party integrations, training and post-go-live hypercare.",
+        "",
+        "## Delivery approach",
+        "",
+        "1. Initiate & confirm scope (workshops against the compliance matrix)",
+        "2. Design sprints per functional area, gap items tracked to closure",
+        "3. Configure & extend in weekly iterations with customer demos",
+        "4. Data migration rehearsal cycles, then cutover",
+        "5. UAT, training delivery, go-live, hypercare",
+        "",
+        "## Key workstreams",
+        "",
+        "- Functional consulting per in-scope module",
+        "- Data migration & cutover",
+        "- Integrations (scope pending clarification)",
+        "- Training & adoption",
+        "- Project management & governance",
+    ]
+    if gaps:
+        lines += ["", "## Gap responses", ""]
+        lines += [f"- **{g}**: addressed via the staffing/scope plan in section 2." for g in dict.fromkeys(gaps)]
+    return "\n".join(lines) + "\n"
