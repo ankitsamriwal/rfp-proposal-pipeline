@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RFP Proposal Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root { --bg:#0a0a0a; --surface:#131311; --line:#26261f; --text:#f2f2ea; --dim:#8f8f82; --accent:#d7ff3f; --ink:#11130a; --danger:#ff5f56; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:"Space Grotesk",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+.mono { font-family:"Space Mono",monospace; font-variant-numeric:tabular-nums; }
+.wrap { max-width:960px; margin:0 auto; padding:0 1rem 4rem; }
+header { padding:1.2rem 0; border-bottom:1px solid var(--line); display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; }
+header h1 { font-size:1.05rem; margin:0; letter-spacing:-0.02em; }
+header h1 span { color:var(--accent); }
+header .tag { color:var(--dim); font-size:.8rem; text-transform:uppercase; letter-spacing:.15em; }
+.hero { padding:2.5rem 0 1.5rem; }
+.hero h2 { font-size:clamp(2rem,5.5vw,3.4rem); line-height:1; letter-spacing:-0.03em; margin:0 0 .8rem; }
+.hero h2 em { font-style:normal; color:var(--accent); }
+.hero p { color:var(--dim); max-width:36rem; line-height:1.55; margin:0; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:1.4rem; margin-top:1.5rem; }
+.drop { border:1.5px dashed var(--line); border-radius:16px; padding:2.2rem 1.4rem; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; }
+.drop:hover, .drop.over { border-color:var(--accent); background:rgba(215,255,63,.04); }
+.drop .big { font-size:1.1rem; font-weight:700; }
+.drop .small { color:var(--dim); font-size:.85rem; margin-top:.4rem; }
+button { font-family:inherit; cursor:pointer; border:none; border-radius:10px; font-weight:700; }
+.btn-accent { background:var(--accent); color:var(--ink); padding:.8rem 1.6rem; font-size:.95rem; text-transform:uppercase; letter-spacing:.03em; }
+.btn-accent:disabled { opacity:.4; cursor:not-allowed; }
+.btn-ghost { background:transparent; color:var(--dim); border:1px solid var(--line); padding:.8rem 1.4rem; }
+.btn-danger { background:transparent; color:var(--danger); border:1px solid var(--danger); padding:.8rem 1.4rem; }
+.phases { display:flex; gap:.5rem; flex-wrap:wrap; margin:1rem 0; }
+.phase { padding:.45rem .9rem; border-radius:999px; border:1px solid var(--line); color:var(--dim); font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; }
+.phase.active { border-color:var(--accent); color:var(--accent); }
+.phase.done { background:var(--accent); color:var(--ink); border-color:var(--accent); font-weight:700; }
+.gate { border:1px solid var(--accent); border-radius:16px; padding:1.2rem 1.4rem; margin-top:1rem; background:rgba(215,255,63,.05); }
+.gate h3 { margin:0 0 .4rem; }
+.gate p { color:var(--dim); margin:.2rem 0 1rem; font-size:.9rem; }
+.gate .row { display:flex; gap:.7rem; flex-wrap:wrap; }
+.statusline { color:var(--dim); font-size:.85rem; margin-top:.8rem; }
+.statusline b { color:var(--text); }
+.artifacts { margin-top:1rem; display:flex; flex-direction:column; gap:.4rem; }
+.artifact { display:flex; align-items:center; gap:.8rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius:10px; cursor:pointer; }
+.artifact:hover { border-color:var(--accent); }
+.artifact .name { flex:1; font-size:.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.artifact a { color:var(--dim); font-size:.78rem; text-decoration:none; text-transform:uppercase; letter-spacing:.1em; }
+.artifact a:hover { color:var(--accent); }
+.viewer { margin-top:1rem; background:#0d0d0b; border:1px solid var(--line); border-radius:12px; padding:1.2rem; max-height:480px; overflow:auto; }
+.viewer pre { white-space:pre-wrap; word-break:break-word; font-family:"Space Mono",monospace; font-size:.8rem; line-height:1.6; color:#d8d8cc; margin:0; }
+.viewer h4 { margin:0 0 .8rem; color:var(--accent); font-size:.85rem; text-transform:uppercase; letter-spacing:.12em; }
+.runs { margin-top:2.5rem; }
+.runs h3 { font-size:.8rem; text-transform:uppercase; letter-spacing:.2em; color:var(--dim); }
+.runrow { display:flex; gap:1rem; align-items:center; padding:.7rem .9rem; border:1px solid var(--line); border-radius:10px; margin-top:.5rem; cursor:pointer; font-size:.85rem; }
+.runrow:hover { border-color:var(--accent); }
+.runrow .st { text-transform:uppercase; font-size:.72rem; letter-spacing:.1em; }
+.st.running { color:var(--accent); } .st.done { color:#7ee787; } .st.error, .st.rejected { color:var(--danger); }
+.hidden { display:none; }
+.note { color:var(--dim); font-size:.78rem; margin-top:1rem; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>RFP<span>Pipeline</span></h1>
+    <span class="tag">Five agents · Human gates · Full audit</span>
+  </header>
+
+  <div class="hero">
+    <h2>Drop an RFP. <em>Five agents</em> draft the response.</h2>
+    <p>Analyst, solution architect, licensing &amp; BOQ, commercial manager, master reviewer - with you approving every phase. Commercial pricing runs locally against a local rate list; it never touches an external model.</p>
+  </div>
+
+  <div class="card">
+    <div id="drop" class="drop">
+      <div class="big">Drop your RFP here, or click to browse</div>
+      <div class="small">PDF, DOCX, TXT or MD</div>
+      <input type="file" id="file" accept=".pdf,.docx,.txt,.md" class="hidden" />
+    </div>
+    <div style="margin-top:1rem; display:flex; gap:.8rem; align-items:center; flex-wrap:wrap;">
+      <button id="start" class="btn-accent" disabled>Run the pipeline</button>
+      <span id="chosen" class="statusline"></span>
+    </div>
+    <p class="note">Demo runs in deterministic mock mode unless the operator configures a real LLM provider server-side. Don't upload real customer RFPs to a hosted demo without your employer's data-policy approval.</p>
+  </div>
+
+  <div id="runview" class="card hidden">
+    <div class="phases" id="phases"></div>
+    <div id="gate" class="gate hidden">
+      <h3>Gate: <span id="gatephase" class="mono"></span></h3>
+      <p id="gateinfo"></p>
+      <div class="row">
+        <button class="btn-accent" onclick="decide('approve')">Approve &amp; continue</button>
+        <button class="btn-danger" onclick="decide('reject')">Reject &amp; stop</button>
+      </div>
+    </div>
+    <div id="status" class="statusline"></div>
+    <div id="artifacts" class="artifacts"></div>
+    <div id="viewer" class="viewer hidden"><h4 id="vtitle"></h4><pre id="vbody"></pre></div>
+  </div>
+
+  <div class="runs card">
+    <h3>Recent runs</h3>
+    <div id="runlist"></div>
+  </div>
+</div>
+
+<script>
+const PHASES = ["analysis", "solution", "commercial", "review"];
+let currentRun = null;
+let pollTimer = null;
+
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+const startBtn = document.getElementById('start');
+const chosen = document.getElementById('chosen');
+
+drop.onclick = () => fileInput.click();
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove('over'); if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; picked(); } };
+fileInput.onchange = picked;
+function picked() {
+  if (fileInput.files.length) { chosen.textContent = fileInput.files[0].name; startBtn.disabled = false; }
+}
+
+startBtn.onclick = async () => {
+  const fd = new FormData();
+  fd.append('file', fileInput.files[0]);
+  startBtn.disabled = true;
+  const resp = await fetch('/api/runs', { method: 'POST', body: fd });
+  if (!resp.ok) { const e = await resp.json().catch(() => ({})); alert(e.detail || 'Upload failed'); startBtn.disabled = false; return; }
+  const { run_id } = await resp.json();
+  currentRun = run_id;
+  document.getElementById('runview').classList.remove('hidden');
+  document.getElementById('runview').scrollIntoView({ behavior: 'smooth' });
+  poll();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(poll, 2000);
+  refreshRuns();
+};
+
+async function poll() {
+  if (!currentRun) return;
+  const r = await (await fetch(`/api/runs/${currentRun}`)).json();
+  render(r);
+  if (['done', 'error', 'rejected'].includes(r.status)) clearInterval(pollTimer);
+}
+
+function render(r) {
+  const phaseIdx = r.gate_pending ? PHASES.indexOf(r.gate_pending) : (r.status === 'done' ? PHASES.length : PHASES.indexOf(r.phase));
+  document.getElementById('phases').innerHTML = PHASES.map((p, i) => {
+    const cls = r.gate_pending === p ? 'phase active' : (i < phaseIdx || r.status === 'done' ? 'phase done' : 'phase');
+    return `<span class="${cls}">${p}</span>`;
+  }).join('');
+
+  const gate = document.getElementById('gate');
+  if (r.gate_pending) {
+    gate.classList.remove('hidden');
+    document.getElementById('gatephase').textContent = r.gate_pending;
+    document.getElementById('gateinfo').textContent = `Produced: ${r.gate_artifacts.join(', ')}. Review the artifacts below, then approve or reject.`;
+  } else gate.classList.add('hidden');
+
+  const st = document.getElementById('status');
+  if (r.status === 'done') st.innerHTML = `<b>Done.</b> All artifacts below. Audit manifest included.`;
+  else if (r.status === 'error') st.innerHTML = `<b>Error:</b> ${r.error}`;
+  else if (r.status === 'rejected') st.innerHTML = `<b>Stopped</b> at a gate.`;
+  else st.innerHTML = `Status: <b>${r.status}</b> · provider: ${r.provider || '…'}`;
+
+  const names = new Set([...(r.artifacts || []), ...(r.gate_artifacts || [])]);
+  document.getElementById('artifacts').innerHTML = [...names].sort().map(n =>
+    `<div class="artifact" onclick="view('${r.id}','${n}')"><span class="name mono">${n}</span><a href="/api/runs/${r.id}/artifacts/${n}?download=true">download</a></div>`
+  ).join('');
+}
+
+async function view(runId, name) {
+  if (name.endsWith('.docx') || name.endsWith('.json')) { window.location = `/api/runs/${runId}/artifacts/${name}?download=true`; return; }
+  const d = await (await fetch(`/api/runs/${runId}/artifacts/${name}`)).json();
+  document.getElementById('viewer').classList.remove('hidden');
+  document.getElementById('vtitle').textContent = name;
+  document.getElementById('vbody').textContent = d.content || '(empty)';
+}
+
+async function decide(decision) {
+  await fetch(`/api/runs/${currentRun}/gate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ decision }) });
+  poll();
+}
+
+async function refreshRuns() {
+  const d = await (await fetch('/api/runs')).json();
+  document.getElementById('runlist').innerHTML = d.runs.map(r =>
+    `<div class="runrow" onclick="currentRun='${r.id}';document.getElementById('runview').classList.remove('hidden');poll();clearInterval(pollTimer);pollTimer=setInterval(poll,2000)">
+      <span class="st ${r.status}">${r.status}</span><span style="flex:1">${r.filename}</span><span class="mono" style="color:var(--dim)">${r.id}</span>
+    </div>`).join('') || '<p class="note">No runs yet.</p>';
+}
+refreshRuns();
+</script>
+</body>
+</html>
